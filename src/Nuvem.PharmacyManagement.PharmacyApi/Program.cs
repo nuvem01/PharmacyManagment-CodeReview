@@ -14,14 +14,13 @@ builder.Services.AddControllers(options  =>
     options.Filters.Add(new ProducesAttribute("application/json"));
     options.Filters.Add(new ConsumesAttribute("application/json"));
 });
-builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextPool<IPharmacyDbContext,PharmacyDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("EFConnectionString"),
         ef => ef.MigrationsAssembly("Nuvem.PharmacyManagement.PharmacyServices")));
 
 builder.Services.AddSwaggerGen(e => e.EnableAnnotations());
-builder.Services.AddTransient<IPharmacyService, PharmacyService>();
 
 AppSettingsConfiguraion appConfig = new();
 builder.Configuration.GetSection("ConnectionStrings").Bind(appConfig);
@@ -50,7 +49,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthorization();
 
 
