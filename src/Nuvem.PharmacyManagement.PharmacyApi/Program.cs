@@ -14,7 +14,7 @@ builder.Services.AddControllers(options  =>
     options.Filters.Add(new ProducesAttribute("application/json"));
     options.Filters.Add(new ConsumesAttribute("application/json"));
 });
-builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
+
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextPool<IPharmacyDbContext,PharmacyDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("EFConnectionString"),
@@ -25,6 +25,7 @@ builder.Services.AddSwaggerGen(e => e.EnableAnnotations());
 AppSettingsConfiguraion appConfig = new();
 builder.Configuration.GetSection("ConnectionStrings").Bind(appConfig);
 builder.Services.AddSingleton(appConfig);
+builder.Services.AddSingleton<ExceptionHandlingMiddleware>();
 
 var allowUrls = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddCors(options =>
